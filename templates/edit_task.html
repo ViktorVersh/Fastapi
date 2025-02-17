@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Task - To-Do List</title>
+</head>
+<body>
+    <h1>Edit Task</h1>
+    <form action="/edit-task/{{ task.id }}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ task.name }}" required>
+        <br>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required>{{ task.description }}</textarea>
+        <br>
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" value="{{ task.category }}" required>
+        <br>
+        <label for="data_end_plan">Planned End Date:</label>
+        <input type="datetime-local" id="data_end_plan" name="data_end_plan" value="{{ task.data_end_plan.isoformat() }}" required>
+        <br>
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+            <option value="planned" {% if task.status == 'planned' %}selected{% endif %}>Planned</option>
+            <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+            <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Completed</option>
+        </select>
+        <br>
+        <input type="submit" value="Save Changes">
+    </form>
+</body>
+</html>

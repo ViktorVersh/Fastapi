@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - To-Do List</title>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <h2>Task List</h2>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Data Created</th>
+            <th>Data End Plan</th>
+            <th>Status</th>
+            <th>Data End</th>
+            <th>Actions</th>
+        </tr>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.name }}</td>
+            <td>{{ task.description }}</td>
+            <td>{{ task.category }}</td>
+            <td>{{ task.data_created.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ task.data_end_plan.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ task.status }}</td>
+            <td>{{ task.data_end.strftime('%Y-%m-%d %H:%M') if task.data_end else '' }}</td>
+            <td>
+                <a href="/edit-task/{{ task.id }}">Edit</a>
+                <form action="/delete-task/{{ task.id }}" method="post" style="display:inline;">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Filter Tasks</h2>
+    <form action="/filter-tasks" method="get">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date">
+        <br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <br>
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="">All</option>
+            <option value="Planned">Planned</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+        </select>
+        <br>
+        <label for="priority">Priority:</label>
+        <select id="priority" name="priority">
+            <option value="">All</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </select>
+        <br>
+        <input type="submit" value="Filter">
+    </form>
+    <form action="/dashboard" method="get">
+        <input type="submit" value="Clear Filters">
+    </form>
+
+    <h2>Task Statistics</h2>
+    <p>Total Tasks: {{ statistics.total_tasks }}</p>
+    <p>Completed Tasks: {{ statistics.completed_tasks }}</p>
+    <p>In Progress Tasks: {{ statistics.in_progress_tasks }}</p>
+    <p>Planned Tasks: {{ statistics.planned_tasks }}</p>
+
+    <button onclick="location.href='/add-task'">Add Task</button>
+</body>
+</html>
