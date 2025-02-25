@@ -66,6 +66,7 @@ class FilterForm(BaseModel):
     status: Optional[str] = None
     priority: Optional[str] = None
 
+
 # Вспомогательные функции
 def get_db():
     db = SessionLocal()
@@ -102,16 +103,18 @@ async def login(request: Request, username: str = Form(...), password: str = For
     request.session["user_id"] = user.id
     return response
 
+
 @app.get("/register", response_class=HTMLResponse)
 async def register_get(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 
+
 @app.post("/register")
 async def register(
-    request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    db: SessionLocal = Depends(get_db)
+        request: Request,
+        username: str = Form(...),
+        password: str = Form(...),
+        db: SessionLocal = Depends(get_db)
 ):
     # Проверяем, существует ли пользователь с таким именем
     existing_user = db.query(User).filter(User.username == username).first()
@@ -166,13 +169,13 @@ async def add_task_get(request: Request):
 
 @app.post("/add-task")
 async def add_task_post(
-    request: Request,
-    name: str = Form(...),
-    description: str = Form(...),
-    category: str = Form(...),
-    data_end_plan: datetime = Form(...),
-    status: str = Form(...),
-    db: SessionLocal = Depends(get_db)
+        request: Request,
+        name: str = Form(...),
+        description: str = Form(...),
+        category: str = Form(...),
+        data_end_plan: datetime = Form(...),
+        status: str = Form(...),
+        db: SessionLocal = Depends(get_db)
 ):
     """
     Маршрут для добавления задачи в базу данных.
@@ -196,21 +199,45 @@ async def add_task_post(
 
     return RedirectResponse(url="/dashboard", status_code=303)
 
+
+@app.get("/edit-task/{task_id}", response_class=HTMLResponse)
+async def edit_task_get(request: Request, task_id: int, db: SessionLocal = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    task = db.query(Task).filter(Task.id == task_id, Task.user_id == user_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return templates.TemplateResponse("edit_task.html", {"request": request, "task": task})
+
+
 @app.post("/edit-task/{task_id}")
 async def edit_task_post(
+        request: Request,
         task_id: int,
-        task_data: TaskForm,
+        name: str = Form(...),
+        description: str = Form(...),
+        category: str = Form(...),
+        data_end_plan: str = Form(...),  # Получаем как строку
+        status: str = Form(...),
         db: SessionLocal = Depends(get_db)
 ):
-    task = db.query(Task).filter(Task.id == task_id).first()
+    user_id = request.session.get("user_id")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    task = db.query(Task).filter(Task.id == task_id, Task.user_id == user_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
-    task.name = task_data.name
-    task.description = task_data.description
-    task.category = task_data.category
-    task.data_end_plan = task_data.data_end_plan
-    task.status = task_data.status
+    # Преобразуем строку в datetime
+    data_end_plan_obj = datetime.strptime(data_end_plan, "%Y-%m-%dT%H:%M")
+
+    task.name = name
+    task.description = description
+    task.category = category
+    task.data_end_plan = data_end_plan_obj
+    task.status = status
 
     db.commit()
     db.refresh(task)
@@ -219,6 +246,12 @@ async def edit_task_post(
 
 @app.post("/delete-task/{task_id}")
 async def delete_task(task_id: int, db: SessionLocal = Depends(get_db)):
+    """
+    Маршрут для удаления задачи из базы данных.
+    :param task_id:
+    :param db:
+    :return:
+    """
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -228,32 +261,25 @@ async def delete_task(task_id: int, db: SessionLocal = Depends(get_db)):
     return RedirectResponse(url="/dashboard", status_code=303)
 
 
-@app.post("/logout")
+@app.get("/logout")
 async def logout(request: Request):
+    """
+    Маршрут для выхода из системы.
+    """
     if "user_id" in request.session:
         del request.session["user_id"]
     return RedirectResponse(url="/", status_code=303)
 
 
-# @app.get("/tasks", response_class=HTMLResponse)
-# async def show_tasks(request: Request, db: SessionLocal = Depends(get_db)):
-#     user_id = request.session.get("user_id")
-#     if not user_id:
-#         return RedirectResponse(url="/", status_code=303)
-#
-#     tasks = db.query(Task).filter(Task.user_id == user_id).all()
-#     task_list = [{"name": task.name, "status": task.status} for task in tasks]
-#     return templates.TemplateResponse("tasks.html", {"request": request, "tasks": task_list})
-
 
 @app.post("/filter-tasks")
 async def filter_tasks(
-    request: Request,
-    filter_data: FilterForm = Depends(),
-    db: SessionLocal = Depends(get_db)
+        request: Request,
+        filter_data: FilterForm = Depends(),
+        db: SessionLocal = Depends(get_db)
 ):
     """
-    Маршрут для фильтрации задач в базе данных.
+    Маршрут для перехода к фильтрации задач в базе данных.
     """
     user_id = request.session.get("user_id")
     if not user_id:
@@ -277,26 +303,18 @@ async def filter_tasks(
     return {"tasks": [{"name": task.name, "status": task.status} for task in tasks]}
 
 
-# @app.get("/tasks", response_class=HTMLResponse)
-# async def view_tasks(request: Request, db: SessionLocal = Depends(get_db)):
-#     user_id: Any | None = request.session.get("user_id")
-#     if not user_id:
-#         return RedirectResponse(url="/", status_code=303)
-#
-#     tasks = db.query(Task).filter(Task.user_id == user_id).all()
-#     task_list = [{"name": task.name, "status": task.status} for task in tasks]
-#     return templates.TemplateResponse("tasks.html", {"request": request, "tasks": task_list})
-
-
 @app.get("/filter-tasks", response_class=HTMLResponse)
 async def filter_tasks(
-    request: Request,
-    date: Optional[str] = Query(None),
-    name: Optional[str] = Query(None),
-    status: Optional[str] = Query(None),
-    priority: Optional[str] = Query(None),
-    db: SessionLocal = Depends(get_db)
+        request: Request,
+        date: Optional[str] = Query(None),
+        name: Optional[str] = Query(None),
+        status: Optional[str] = Query(None),
+        priority: Optional[str] = Query(None),
+        db: SessionLocal = Depends(get_db)
 ):
+    """
+    Маршрут для фильтрации задач в базе данных.
+    """
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/", status_code=303)
@@ -304,7 +322,9 @@ async def filter_tasks(
     query = db.query(Task).filter(Task.user_id == user_id)
 
     if date:
-        query = query.filter(Task.data_created == date)
+        date_obj = datetime.strptime(date, "%Y-%m-%d")
+        next_day = date_obj + timedelta(days=1)
+        query = query.filter(Task.data_created >= date_obj, Task.data_created < next_day)
 
     if name:
         query = query.filter(Task.name.ilike(f"%{name}%"))
@@ -334,71 +354,6 @@ async def filter_tasks(
         "dashboard.html",
         {"request": request, "tasks": tasks, "statistics": statistics}
     )
-
-
-@app.post("/filter-tasks")
-async def filter_tasks(
-    request: Request,
-    filter_data: FilterForm = Depends(),
-    db: SessionLocal = Depends(get_db)
-):
-    """
-    Маршрут для фильтрации задач в базе данных.
-    """
-    user_id = request.session.get("user_id")
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    query = db.query(Task).filter(Task.user_id == user_id)
-
-    if filter_data.date:
-        query = query.filter(Task.data_created == filter_data.date)
-
-    if filter_data.name:
-        query = query.filter(Task.name.ilike(f"%{filter_data.name}%"))
-
-    if filter_data.status:
-        query = query.filter(Task.status == filter_data.status)
-
-    if filter_data.priority:
-        query = query.filter(Task.priority == filter_data.priority)
-
-    tasks = query.all()
-    return {"tasks": [{"name": task.name, "status": task.status} for task in tasks]}
-
-
-
-@app.post("/create-test-data")
-async def create_test_data(db: SessionLocal = Depends(get_db)):
-    existing_user = db.query(User).filter(User.username == "testuser").first()
-    if existing_user:
-        return {"message": "Test user already exists"}
-
-    hashed_password = get_password_hash("1q2w3e")
-    test_user = User(username="testuser", hashed_password=hashed_password)
-    db.add(test_user)
-    db.commit()
-    db.refresh(test_user)
-
-    for i in range(10):
-        task = Task(
-            name=f"Task {i + 1}",
-            description=f"Description for task {i + 1}",
-            category="Test Category",
-            data_created=datetime.now(),
-            data_end_plan=datetime.now() + timedelta(days=7),
-            status="Planned",
-            user_id=test_user.id
-        )
-        db.add(task)
-
-    try:
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        return {"message": "Error adding tasks to database"}
-
-    return {"message": "Test data created successfully"}
 
 
 # Запуск приложения

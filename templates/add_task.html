@@ -1,65 +1,38 @@
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-<!--<head>-->
-<!--    <title>Add Task - To-Do List</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--    <h1>Add Task</h1>-->
-<!--    <form action="/add_task" method="post">-->
-<!--        <label for="name">Name:</label>-->
-<!--        <input type="text" id="name" name="name" required>-->
-<!--        <br>-->
-<!--        <label for="description">Description:</label>-->
-<!--        <textarea id="description" name="description" required></textarea>-->
-<!--        <br>-->
-<!--        <label for="category">Category:</label>-->
-<!--        <input type="text" id="category" name="category" required>-->
-<!--        <br>-->
-<!--        <label for="data_end_plan">Planned End Date:</label>-->
-<!--        <input type="datetime-local" id="data_end_plan" name="data_end_plan" required>-->
-<!--        <br>-->
-<!--        <label for="status">Status:</label>-->
-<!--        <select id="status" name="status" required>-->
-<!--            <option value="planned">Planned</option>-->
-<!--            <option value="in_progress">In Progress</option>-->
-<!--            <option value="completed">Completed</option>-->
-<!--        </select>-->
-<!--        <br>-->
-<!--        <input type="submit" value="Add Task">-->
-<!--    </form>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Task</title>
 </head>
 <body>
-    <h1>Add Task</h1>
+    <h1>Добавление задачи</h1>
     <form action="/add-task" method="post">
-        <label for="name">Name:</label>
+        <label for="name">Имя задачи:</label>
         <input type="text" id="name" name="name" required>
+        <p></p>
         <br>
-        <label for="description">Description:</label>
+        <label for="description">Описание задачи:</label>
         <textarea id="description" name="description" required></textarea>
+        <p></p>
         <br>
-        <label for="category">Category:</label>
+        <label for="category">Категория задачи:</label>
         <input type="text" id="category" name="category" required>
+        <p></p>
         <br>
-        <label for="data_end_plan">End Plan Date:</label>
+        <label for="data_end_plan">Дата окончания задачи:</label>
         <input type="datetime-local" id="data_end_plan" name="data_end_plan" required>
+        <p></p>
         <br>
-        <label for="status">Status:</label>
+        <label for="status">Статус задачи:</label>
         <select id="status" name="status" required>
-            <option value="Planned">Planned</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
+            <option value="Planned">Запланировано</option>
+            <option value="In Progress">В процессе</option>
+            <option value="Completed">Выполнено</option>
         </select>
         <br>
-        <button type="submit">Add Task</button>
+        <p></p>
+        <button type="submit">Добавить задачу</button>
     </form>
     <p><a href="/dashboard">Back to Dashboard</a></p>
 </body>

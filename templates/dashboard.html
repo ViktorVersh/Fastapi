@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Dashboard - To-Do List</title>
+    <meta charset="UTF-8">
+    <title>Основная панель</title>
 </head>
 <body>
-    <h1>Dashboard</h1>
-    <h2>Task List</h2>
-    <table border="1">
+    <h1>Основная панель</h1>
+    <h2>Список задач</h2>
+    <table border="2" cellpadding="8">
         <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Data Created</th>
-            <th>Data End Plan</th>
-            <th>Status</th>
-            <th>Data End</th>
-            <th>Actions</th>
+            <th>Название задачи</th>
+            <th>Описание задачи</th>
+            <th>Категория задачи</th>
+            <th>Дата создания</th>
+            <th>Дата окончания</th>
+            <th>Статус задачи</th>
+            <th>Дата завершения</th>
+            <th>Возможные действия</th>
         </tr>
         {% for task in tasks %}
         <tr>
@@ -27,7 +28,10 @@
             <td>{{ task.status }}</td>
             <td>{{ task.data_end.strftime('%Y-%m-%d %H:%M') if task.data_end else '' }}</td>
             <td>
-                <a href="/edit-task/{{ task.id }}">Edit</a>
+<!--                <a href="/edit-task/{{ task.id }}">Edit</a>-->
+                <form action="/edit-task/{{ task.id }}" method="get" style="display:inline;">
+                    <input type="submit" value="Edit">
+                </form>
                 <form action="/delete-task/{{ task.id }}" method="post" style="display:inline;">
                     <input type="submit" value="Delete">
                 </form>
@@ -36,42 +40,53 @@
         {% endfor %}
     </table>
 
-    <h2>Filter Tasks</h2>
+    <h2>Фильтр задач</h2>
     <form action="/filter-tasks" method="get">
-        <label for="date">Date:</label>
+        <label for="date">Дата:</label>
         <input type="date" id="date" name="date">
         <br>
-        <label for="name">Name:</label>
+        <p></p>
+        <label for="name">Название Задачи:</label>
         <input type="text" id="name" name="name">
         <br>
-        <label for="status">Status:</label>
+        <p></p>
+        <label for="status">Статус задачи:</label>
         <select id="status" name="status">
             <option value="">All</option>
-            <option value="Planned">Planned</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
+            <option value="Planned">Запланировано</option>
+            <option value="In Progress">В процессе</option>
+            <option value="Completed">Выполнено</option>
         </select>
         <br>
-        <label for="priority">Priority:</label>
+        <p></p>
+        <label for="priority">Приоритет:</label>
         <select id="priority" name="priority">
-            <option value="">All</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
+            <option value="">Все</option>
+            <option value="High">Высокий</option>
+            <option value="Medium">Средний</option>
+            <option value="Low">Низкий</option>
         </select>
         <br>
-        <input type="submit" value="Filter">
+        <p></p>
+        <input type="submit" value="Фильтр">
     </form>
+    <p></p>
     <form action="/dashboard" method="get">
-        <input type="submit" value="Clear Filters">
+        <input type="submit" value="Очистить фильтр">
     </form>
 
-    <h2>Task Statistics</h2>
-    <p>Total Tasks: {{ statistics.total_tasks }}</p>
-    <p>Completed Tasks: {{ statistics.completed_tasks }}</p>
-    <p>In Progress Tasks: {{ statistics.in_progress_tasks }}</p>
-    <p>Planned Tasks: {{ statistics.planned_tasks }}</p>
+    <h2>Статистика по задачам</h2>
+        <table border="2" cellpadding="8">
+            <tr>
+            <th>Всего задач: {{ statistics.total_tasks }}</th>
+            <th>Выполнено: {{ statistics.completed_tasks }}</th>
+            <th>В процессе выполнения: {{ statistics.pending_tasks }}</th>
+            </tr>
+        </table>
+    <p></p>
 
-    <button onclick="location.href='/add-task'">Add Task</button>
+    <button onclick="location.href='/add-task'">Добавить задачу</button>
+    <p></p>
+    <button onclick="location.href='/logout'">Выход</button>
 </body>
 </html>

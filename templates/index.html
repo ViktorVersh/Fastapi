@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
     <title>Список задач</title>
 </head>
 <body>
     <h1>Добро пожаловать в список задач</h1>
     <form action="/login" method="post">
-        <label for="username">Username:</label>
+        <label for="username">Имя пользователя:</label>
         <input type="text" id="username" name="username" required>
+        <p></p>
         <br>
-        <label for="password">Password:</label>
+        <label for="password">Пароль:</label>
         <input type="password" id="password" name="password" required>
+        <p></p>
         <br>
-        <input type="submit" value="Login">
+        <input type="submit" value="Вход">
     </form>
-    <p>Don't have an account? <a href="/register">Register</a></p>
+    <p>Ещё нет аккаунта? <a href="/register">Регистрация</a></p>
 </body>
 </html>
