@@ -1,18 +1,19 @@
 from fastapi import FastAPI, Form, Depends, Request, HTTPException, Query
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
+# from fastapi.staticfiles import StaticFiles
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timedelta
-from sqlalchemy.exc import IntegrityError
 from passlib.context import CryptContext
 from starlette.middleware.sessions import SessionMiddleware
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="your-secret-key")
+# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Настройка SQLAlchemy
 DATABASE_URL = "sqlite:///./fastapdb.db"

@@ -1,40 +1,45 @@
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-<!--<head>-->
-<!--    <title>Register - To-Do List</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--    <h1>Register</h1>-->
-<!--    <form action="/register" method="post">-->
-<!--        <label for="username">Username:</label>-->
-<!--        <input type="text" id="username" name="username" required>-->
-<!--        <br>-->
-<!--        <label for="password">Password:</label>-->
-<!--        <input type="password" id="password" name="password" required>-->
-<!--        <br>-->
-<!--        <input type="submit" value="Register">-->
-<!--    </form>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Регистрация</title>
+    <style>
+        body {
+            background-color: lightblue; /* Измените цвет на любой другой */
+        }
+    </style>
 </head>
+<style>
+    h1 {
+        color: blue;
+    }
+    h2 {
+        color: green;
+    }
+    form {
+    color: blue;
+    }
+    button {
+    color: green;
+    }
+    input {
+    color: green;
+    }
+</style>
 <body>
-    <h1>Register</h1>
+    <h1>Регистрация</h1>
     <form action="/register" method="post">
-        <label for="username">Username:</label>
+        <label for="username">Имя пользователя:</label>
         <input type="text" id="username" name="username" required>
+        <p></p>
         <br>
-        <label for="password">Password:</label>
+        <label for="password">Пароль:</label>
         <input type="password" id="password" name="password" required>
+        <p></p>
         <br>
-        <button type="submit">Register</button>
+        <button type="submit">Регистрация</button>
     </form>
-    <p>Already have an account? <a href="/">Login here</a></p>
+    <p>Уже есть аккаунт? <a href="/">Вход</a></p>
 </body>
 </html>

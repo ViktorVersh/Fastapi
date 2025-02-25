@@ -3,7 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Основная панель</title>
+    <style>
+        body {
+            background-color: lightblue; /* Измените цвет на любой другой */
+        }
+    </style>
 </head>
+<style>
+    h1 {
+        color: blue;
+    }
+    h2 {
+        color: green;
+    }
+    form {
+    color: blue;
+    }
+    button {
+    color: green;
+    }
+    input {
+    color: green;
+    }
+</style>
 <body>
     <h1>Основная панель</h1>
     <h2>Список задач</h2>
@@ -15,7 +37,6 @@
             <th>Дата создания</th>
             <th>Дата окончания</th>
             <th>Статус задачи</th>
-            <th>Дата завершения</th>
             <th>Возможные действия</th>
         </tr>
         {% for task in tasks %}
@@ -26,7 +47,6 @@
             <td>{{ task.data_created.strftime('%Y-%m-%d %H:%M') }}</td>
             <td>{{ task.data_end_plan.strftime('%Y-%m-%d %H:%M') }}</td>
             <td>{{ task.status }}</td>
-            <td>{{ task.data_end.strftime('%Y-%m-%d %H:%M') if task.data_end else '' }}</td>
             <td>
 <!--                <a href="/edit-task/{{ task.id }}">Edit</a>-->
                 <form action="/edit-task/{{ task.id }}" method="get" style="display:inline;">
