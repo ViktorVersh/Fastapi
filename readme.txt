@@ -12,16 +12,16 @@
 
 Установка:
 
-1. Clone the repository:
+1. Клонируйте репозиторий:
 
 
-2. Install the dependencies:
+2. Установите зависимости:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Run the application:
+3. Запустите приложение:
 
 ```bash
 cd .\Fastapi\
