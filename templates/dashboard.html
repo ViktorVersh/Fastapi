@@ -44,8 +44,8 @@
             <td>{{ task.name }}</td>
             <td>{{ task.description }}</td>
             <td>{{ task.category }}</td>
-            <td>{{ task.data_created.strftime('%Y-%m-%d %H:%M') }}</td>
-            <td>{{ task.data_end_plan.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ task.data_created.strftime('%d-%m-%Y %H:%M') }}</td>
+            <td>{{ task.data_end_plan.strftime('%d-%m-%Y %H:%M') }}</td>
             <td>{{ task.status }}</td>
             <td>
 <!--                <a href="/edit-task/{{ task.id }}">Edit</a>-->
