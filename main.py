@@ -112,7 +112,6 @@ async def register_get(request: Request):
 
 @app.post("/register")
 async def register(
-        request: Request,
         username: str = Form(...),
         password: str = Form(...),
         db: SessionLocal = Depends(get_db)
@@ -272,7 +271,6 @@ async def logout(request: Request):
     return RedirectResponse(url="/", status_code=303)
 
 
-
 @app.post("/filter-tasks")
 async def filter_tasks(
         request: Request,
@@ -361,4 +359,8 @@ async def filter_tasks(
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(
+        "main:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True)
